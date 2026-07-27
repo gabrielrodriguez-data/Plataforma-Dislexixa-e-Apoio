@@ -68,7 +68,7 @@ cd Plataforma-Dislexixa-e-Apoio
 
 Você pode acessar e testar o jogo diretamente pelo navegador através do GitHub Pages , sem a necessidade de instalação prévia:
 
-👉 Acessar o Jogo Online (https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.git)
+👉 Acessar o Jogo Online (https://gabrielrodriguez-data.github.io/Plataforma-Dislexixa-e-Apoio/)
 
 # Abra o arquivo direto no navegador
 
