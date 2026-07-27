@@ -59,9 +59,11 @@ Este é um protótipo front-end funcional em um único arquivo HTML — não req
 bash
 
 # Clone o repositório
+
 git clone https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.git
 
 # Entre na pasta
+
 cd Plataforma-Dislexixa-e-Apoio
 
 🚀 Demonstração e Acesso Online
@@ -77,6 +79,7 @@ Você pode acessar e testar o jogo diretamente pelo navegador através do GitHub
 📂 Estrutura do repositório
 
 dislexia-e-apoio/
+
 ├── index.html          # Plataforma completa (landing, login, dashboards, jogos)
 └── README.md
 
