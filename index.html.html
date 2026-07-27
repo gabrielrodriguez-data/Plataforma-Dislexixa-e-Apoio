@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DISLEXIA e APOIO — Plataforma Web Inclusiva</title>
+<style>
+  :root{
+    --bg:#FAF3E7; --panel:#FFFDF8; --ink:#2E2A24;
+    --teal:#2F6E62; --teal-dark:#1F4A42;
+    --coral:#E8794A; --coral-dark:#C75E32;
+    --violet:#7C6FA6; --gold:#D6A419;
+    --good:#4CA98F; --bad:#D2543F; --mid:#E0A93A;
+    --ring:#2F6E62; --font-scale:1; --line-gap:1.6;
+  }
+  [data-contrast="alto"]{
+    --bg:#10161A; --panel:#1B2329; --ink:#F6F1E7;
+    --teal:#6FD1B8; --teal-dark:#4CA98F; --coral:#FFAE7A; --coral-dark:#FF8F4D;
+    --violet:#B7ACDD; --ring:#6FD1B8;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family: Verdana, Tahoma, "Segoe UI", sans-serif;
+    letter-spacing:0.02em; line-height:var(--line-gap);
+    font-size:calc(16px * var(--font-scale));
+    min-height:100vh;
+  }
+  .hidden{ display:none !important; }
+  a{ color: var(--teal-dark); }
+  button{ font-family:inherit; }
+
+  /* Topbar */
+  .topbar{
+    background:var(--panel); border-bottom:2px solid var(--teal);
+    padding:10px 16px; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:40;
+  }
+  .brand{ display:flex; align-items:center; gap:8px; font-weight:800; color:var(--teal-dark); font-size:1.05em; }
+  .nav{ display:flex; gap:6px; flex-wrap:wrap; }
+  .nav button{
+    border:2px solid var(--teal); background:transparent; color:var(--teal-dark);
+    padding:6px 12px; border-radius:999px; font-weight:bold; cursor:pointer; font-size:0.82em;
+  }
+  .nav button.active{ background:var(--teal); color:#fff; }
+  .userchip{ font-size:0.82em; background:var(--coral); color:#fff; border-radius:999px; padding:5px 12px; font-weight:bold; }
+  .logout-btn{ border:none; background:transparent; color:var(--teal-dark); font-weight:bold; cursor:pointer; font-size:0.82em; text-decoration:underline; }
+
+  .a11y-panel{
+    background:var(--panel); border-bottom:2px solid var(--teal);
+    padding:8px 16px; display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center; font-size:0.82em;
+  }
+  .a11y-group{ display:flex; align-items:center; gap:6px; }
+  .a11y-group label{ font-weight:bold; white-space:nowrap; }
+  input[type="range"]{ width:100px; accent-color:var(--teal); }
+  .toggle-btn{ border:2px solid var(--teal); background:transparent; color:var(--teal-dark); border-radius:999px; padding:4px 10px; font-weight:bold; cursor:pointer; font-size:0.9em; }
+  .toggle-btn[aria-pressed="true"]{ background:var(--teal); color:#fff; }
+  button:focus-visible, input:focus-visible{ outline:3px solid var(--ring); outline-offset:2px; }
+
+  .page{ max-width: 1040px; margin: 0 auto; padding: 22px 16px 60px; }
+  .card{ background:var(--panel); border:2px solid var(--teal); border-radius:18px; padding:20px; margin-bottom:18px; }
+  .card h2{ color:var(--teal-dark); margin-top:0; }
+  .muted{ opacity:0.8; font-size:0.92em; }
+
+  /* Landing */
+  .hero{ text-align:center; padding: 30px 16px 10px; }
+  .eyebrow{ display:inline-block; background:var(--violet); color:#fff; font-weight:bold; font-size:0.7em; padding:4px 12px; border-radius:999px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px; }
+  .hero h1{ font-size:2.1em; color:var(--teal-dark); margin:6px 0 8px; }
+  .hero p{ max-width:640px; margin:0 auto 18px; opacity:0.85; }
+  .cta-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .primary-btn{ background:var(--coral); color:#fff; border:none; border-radius:12px; padding:12px 22px; font-weight:800; cursor:pointer; font-size:1em; }
+  .primary-btn:hover{ background:var(--coral-dark); }
+  .ghost-btn{ background:transparent; color:var(--teal-dark); border:2px solid var(--teal); border-radius:12px; padding:10px 20px; font-weight:bold; cursor:pointer; }
+
+  .benefits-grid, .games-grid, .stat-cards, .role-grid, .activity-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;
+  }
+  .benefit-card, .game-card{ background:var(--bg); border:2px solid var(--teal); border-radius:14px; padding:14px; }
+  .benefit-card .ic, .game-card .ic{ font-size:1.6em; }
+  .game-card h3{ margin:8px 0 4px; color:var(--teal-dark); font-size:1em; }
+  .game-card p{ font-size:0.85em; opacity:0.85; margin:0 0 10px; }
+  .faq-item{ border-bottom:1px solid var(--teal); padding:10px 0; }
+  .faq-item b{ color:var(--teal-dark); }
+
+  /* Login */
+  .login-card{ max-width:480px; margin:20px auto; text-align:center; }
+  .login-card input[type="text"]{ width:100%; padding:10px 12px; border-radius:10px; border:2px solid var(--teal); font-size:1em; margin:10px 0 16px; font-family:inherit; background:var(--panel); color:var(--ink); }
+  .role-grid{ margin-bottom:16px; }
+  .role-choice{ background:var(--bg); border:2px solid var(--teal); border-radius:12px; padding:12px; cursor:pointer; text-align:center; font-weight:bold; }
+  .role-choice[aria-pressed="true"]{ background:var(--teal); color:#fff; }
+  .role-choice .ic{ font-size:1.6em; display:block; margin-bottom:4px; }
+
+  /* Dashboard aluno */
+  .dash-header{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+  .dash-avatar{ font-size:2.4em; }
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .badge{ background:var(--panel); border:2px dashed var(--teal); border-radius:12px; padding:6px 10px; font-size:0.78em; opacity:0.45; filter:grayscale(1); }
+  .badge.unlocked{ opacity:1; filter:none; border-style:solid; border-color:var(--coral); }
+  .stat-card{ background:var(--bg); border:2px solid var(--teal); border-radius:12px; padding:12px; text-align:center; }
+  .stat-card .n{ font-size:1.35em; font-weight:800; color:var(--coral-dark); display:block; }
+  .stat-card .l{ font-size:0.7em; text-transform:uppercase; letter-spacing:0.06em; opacity:0.75; }
+
+  .bar-chart-row{ display:flex; align-items:center; gap:10px; margin:6px 0; font-size:0.86em; }
+  .bar-chart-row .name{ width:150px; }
+  .bar-track{ flex:1; background:#ddd3c0; border-radius:999px; height:12px; overflow:hidden; border:1px solid var(--teal); }
+  [data-contrast="alto"] .bar-track{ background:#2a3238; }
+  .bar-fill{ height:100%; background:var(--teal); }
+  .bar-fill.low{ background:var(--bad); }
+  .bar-fill.mid{ background:var(--mid); }
+  .bar-pct{ width:44px; text-align:right; font-weight:bold; }
+
+  /* Atividades */
+  .game-card button.play-btn{
+    background:var(--teal); color:#fff; border:none; border-radius:10px; padding:8px 14px; font-weight:bold; cursor:pointer; font-size:0.85em;
+  }
+  .activity-stage{ background:var(--bg); border:2px solid var(--violet); border-radius:16px; padding:18px; margin-top:14px; }
+  .activity-stage h3{ margin-top:0; color:var(--violet); }
+
+  /* Memória */
+  .board{ display:grid; gap:10px; justify-content:center; margin:14px auto; }
+  .mcard{ width:100%; aspect-ratio:1; border-radius:12px; cursor:pointer; border:none; background:transparent; perspective:800px; padding:0; }
+  .mcard-inner{ width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .4s ease; }
+  .mcard.flip .mcard-inner, .mcard.matched .mcard-inner{ transform:rotateY(180deg); }
+  .mface{ position:absolute; inset:0; border-radius:12px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; font-weight:bold; text-align:center; padding:4px; }
+  .mface.back{ background:#C9BFE0; font-size:1.4em; color:transparent; }
+  [data-contrast="alto"] .mface.back{ background:#35506B; }
+  .mface.back::after{ content:"?"; color:rgba(255,255,255,0.5); }
+  .mface.front{ background:var(--panel); border:2px solid var(--teal); transform:rotateY(180deg); font-size:clamp(0.75em,3vw,1.2em); }
+  .mcard.matched .mface.front{ border-color:var(--coral); }
+  .emoji-face{ font-size:clamp(1.4em,4vw,2.2em); }
+
+  /* Quiz / categorização / sequência genéricos */
+  .options-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin:12px 0; }
+  .option-btn{ border:2px solid var(--teal); background:var(--panel); color:var(--ink); border-radius:12px; padding:10px 12px; font-weight:bold; cursor:pointer; }
+  .option-btn:hover{ background:var(--teal); color:#fff; }
+  .option-btn.correct{ background:var(--good); border-color:var(--good); color:#fff; }
+  .option-btn.wrong{ background:var(--bad); border-color:var(--bad); color:#fff; }
+  .word-pool{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+  .word-chip{ border:2px solid var(--teal); background:var(--panel); border-radius:999px; padding:8px 14px; font-weight:bold; cursor:pointer; }
+  .word-chip.selected{ background:var(--violet); color:#fff; border-color:var(--violet); }
+  .word-chip.done{ opacity:0.35; cursor:default; }
+  .cat-buckets{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin:12px 0; }
+  .cat-bucket{ border:2px dashed var(--teal); background:var(--panel); border-radius:12px; padding:12px; text-align:center; font-weight:bold; cursor:pointer; min-height:70px; }
+  .cat-bucket .items{ font-size:0.8em; font-weight:normal; margin-top:6px; opacity:0.8; }
+
+  .seq-list{ list-style:none; padding:0; margin:12px 0; max-width:520px; }
+  .seq-item{ background:var(--panel); border:2px solid var(--teal); border-radius:10px; padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .seq-item .txt{ flex:1; font-size:0.92em; }
+  .seq-move{ border:1px solid var(--teal); background:transparent; color:var(--teal-dark); border-radius:8px; padding:2px 8px; cursor:pointer; font-weight:bold; }
+
+  .feedback{ text-align:center; min-height:1.6em; font-weight:bold; color:var(--teal-dark); margin:8px 0; }
+  .hint-btn{ display:inline-block; background:transparent; border:2px dashed var(--violet); color:var(--violet); border-radius:999px; padding:5px 12px; font-size:0.8em; cursor:pointer; font-weight:bold; }
+
+  .reading-text{ background:var(--panel); border-left:5px solid var(--violet); border-radius:10px; padding:14px 16px; font-size:1.02em; margin:12px 0; }
+  .reading-text .w{ padding:1px 2px; border-radius:3px; }
+  .reading-text .w.active{ background:var(--coral); color:#fff; }
+
+  /* Tabela professor */
+  table.roster{ width:100%; border-collapse:collapse; font-size:0.85em; margin-top:8px; }
+  table.roster th, table.roster td{ padding:8px 10px; text-align:left; border-bottom:1px solid var(--teal); }
+  table.roster th{ color:var(--teal-dark); }
+  .tag-note{ font-size:0.78em; opacity:0.7; margin:4px 0 14px; }
+  .suggestion{ background:var(--bg); border-left:5px solid var(--coral); border-radius:10px; padding:12px 14px; font-size:0.9em; margin-top:14px; }
+
+  .tips-list{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:14px; }
+  .tip-card{ background:var(--bg); border:2px solid var(--violet); border-radius:12px; padding:12px 14px; font-size:0.88em; }
+  .tip-card b{ color:var(--violet); }
+
+  .forum-post{ background:var(--bg); border:2px solid var(--teal); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+  .forum-post .meta{ font-size:0.75em; opacity:0.7; margin-bottom:4px; }
+  textarea, input[type="email"]{ width:100%; padding:10px; border-radius:10px; border:2px solid var(--teal); font-family:inherit; background:var(--panel); color:var(--ink); }
+
+  footer{ text-align:center; font-size:0.75em; opacity:0.6; margin-top:20px; padding-bottom: 20px; }
+</style>
+</head>
+<body data-contrast="normal">
+
+<div class="topbar" id="topbar">
+  <div class="brand">📚 DISLEXIA <span style="color:var(--coral-dark);">e</span> APOIO</div>
+  <div class="nav" id="mainNav"></div>
+  <div id="userArea" style="display:flex; align-items:center; gap:10px;"></div>
+</div>
+
+<div class="a11y-panel">
+  <div class="a11y-group">
+    <label for="fontSize">Tamanho da letra</label>
+    <input type="range" id="fontSize" min="12" max="24" value="16" step="1">
+    <span id="fontSizeVal">16px</span>
+  </div>
+  <div class="a11y-group">
+    <label for="speed">Velocidade da voz</label>
+    <input type="range" id="speed" min="0.5" max="2" value="1" step="0.1">
+    <span id="speedVal">1.0x</span>
+  </div>
+  <button class="toggle-btn" id="contrastToggle" aria-pressed="false">🌗 Alto contraste</button>
+  <button class="toggle-btn" id="soundToggle" aria-pressed="true">🔊 Narração</button>
+</div>
+
+<div class="page" id="page"></div>
+
+<footer>Plataforma DISLEXIA e APOIO — IFTO · Projeto Integrador III · Gabriel Andrade Rodriguez</footer>
+
+<script>
+(function(){
+  // ======================= DADOS =======================
+  const WORDS = [
+    { word:"CACHORRO", emoji:"🐶", cat:"Animais" },
+    { word:"GATO", emoji:"🐱", cat:"Animais" },
+    { word:"PEIXE", emoji:"🐟", cat:"Animais" },
+    { word:"SOL", emoji:"☀️", cat:"Natureza" },
+    { word:"LUA", emoji:"🌙", cat:"Natureza" },
+    { word:"ESTRELA", emoji:"⭐", cat:"Natureza" },
+    { word:"FLOR", emoji:"🌸", cat:"Natureza" },
+    { word:"CASA", emoji:"🏠", cat:"Objetos" },
+    { word:"LIVRO", emoji:"📖", cat:"Objetos" },
+    { word:"SAPATO", emoji:"👟", cat:"Objetos" },
+    { word:"MAÇÃ", emoji:"🍎", cat:"Comida" },
+    { word:"PÃO", emoji:"🍞", cat:"Comida" }
+  ];
+  const CATEGORIES = ["Animais","Natureza","Objetos","Comida"];
+
+  const RHYME_QUESTIONS = [
+    { q:"Qual dessas palavras rima com GATO?", options:["SAPATO","CASA","LIVRO","SOL"], correct:0, hint:"Termina com o mesmo som de 'ato'." },
+    { q:"Qual dessas palavras rima com FLOR?", options:["SOL","AMOR","LUA","PÃO"], correct:1, hint:"Termina com o som de 'or'." },
+    { q:"Qual dessas palavras rima com PÃO?", options:["MÃO","LUA","CASA","LIVRO"], correct:0, hint:"Termina com o som nasal de 'ão'." },
+    { q:"Qual dessas palavras rima com CASA?", options:["ASA","SOL","FLOR","LIVRO"], correct:0, hint:"Termina com o som de 'asa'." },
+    { q:"Quantas sílabas tem a palavra CACHORRO?", options:["2","3","4","5"], correct:1, hint:"CA-CHOR-RO." },
+    { q:"Quantas sílabas tem a palavra BORBOLETA?", options:["3","4","5","2"], correct:1, hint:"BOR-BO-LE-TA." }
+  ];
+
+  const SEQUENCE_STEPS = [
+    "Ana acorda e escova os dentes.",
+    "Ana toma café da manhã.",
+    "Ana vai para a escola.",
+    "Ana participa das aulas.",
+    "Ana volta para casa e faz a lição."
+  ];
+
+  const READING_TEXT = "A dislexia é uma dificuldade para ler e escrever que não tem relação com inteligência. Muitas pessoas com dislexia aprendem de formas diferentes, usando mais o som das palavras e as imagens do que apenas o texto escrito. Com o apoio certo, qualquer aluno disléxico pode aprender e crescer.";
+  const COMP_QUESTIONS = [
+    { q:"A dislexia está relacionada à inteligência da pessoa?", options:["Sim","Não"], correct:1, hint:"O texto diz claramente que não tem relação." },
+    { q:"Segundo o texto, o que ajuda pessoas com dislexia a aprender?", options:["Apoio certo","Ignorar o problema","Estudar sozinho, sem ajuda","Nada ajuda"], correct:0, hint:"É a última frase do texto." }
+  ];
+
+  const GAMES = [
+    { id:"memoria", ic:"🧩", name:"Memória de Palavras", desc:"Associe imagens às palavras correspondentes.", statKey:"memoria" },
+    { id:"fonologico", ic:"🔤", name:"Quiz Fonológico", desc:"Rimas e sílabas para treinar a consciência fonológica.", statKey:"fonologico" },
+    { id:"categorizacao", ic:"🗂️", name:"Categorização de Palavras", desc:"Agrupe as palavras nas categorias certas.", statKey:"categorizacao" },
+    { id:"sequencia", ic:"🔢", name:"Sequência Lógica", desc:"Coloque os acontecimentos na ordem correta.", statKey:"sequencia" },
+    { id:"leitura", ic:"🎧", name:"Leitura Assistida", desc:"Ouça o texto narrado e responda sobre o que entendeu.", statKey:"leitura" }
+  ];
+
+  const MOCK_STUDENTS = [
+    { name:"Ana Beatriz", avatar:"👧", points:410, stats:{ memoria:{correct:9,wrong:1}, fonologico:{correct:5,wrong:1}, categorizacao:{correct:10,wrong:2}, sequencia:{correct:1,wrong:0}, leitura:{correct:2,wrong:0} } },
+    { name:"João Pedro",  avatar:"🧒", points:190, stats:{ memoria:{correct:4,wrong:4}, fonologico:{correct:2,wrong:4}, categorizacao:{correct:3,wrong:5}, sequencia:{correct:0,wrong:1}, leitura:{correct:0,wrong:0} } },
+    { name:"Marcos Vinícius", avatar:"🥷", points:560, stats:{ memoria:{correct:10,wrong:0}, fonologico:{correct:6,wrong:0}, categorizacao:{correct:12,wrong:0}, sequencia:{correct:1,wrong:0}, leitura:{correct:2,wrong:0} } }
+  ];
+
+  // ======================= ESTADO =======================
+  let state = {
+    user: null, // { name, role }
+    points: 0,
+    badges: [],
+    stats: { memoria:{correct:0,wrong:0}, fonologico:{correct:0,wrong:0}, categorizacao:{correct:0,wrong:0}, sequencia:{correct:0,wrong:0}, leitura:{correct:0,wrong:0} },
+    soundOn: true, speechRate: 1,
+    currentScreen: "landing",
+    forumPosts: [
+      { author:"Prof. Francirley", text:"Bem-vindos ao fórum! Compartilhem dúvidas e conquistas aqui.", },
+      { author:"Ana Beatriz", text:"Consegui 3 estrelas no jogo da memória hoje! 🎉" }
+    ]
+  };
+
+  function speak(text){
+    if(!state.soundOn) return;
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "pt-BR"; u.rate = state.speechRate;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  async function saveProgress(){
+    try{
+      if(window.storage && window.storage.set){
+        await window.storage.set("plataforma_progresso", JSON.stringify({
+          user: state.user, points: state.points, badges: state.badges, stats: state.stats
+        }), false);
+      }
+    }catch(e){}
+  }
+  async function loadProgress(){
+    try{
+      if(window.storage && window.storage.get){
+        const r = await window.storage.get("plataforma_progresso", false);
+        if(r && r.value) return JSON.parse(r.value);
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function accuracyOf(s){
+    const total = s.correct + s.wrong;
+    return total === 0 ? null : Math.round((s.correct/total)*100);
+  }
+
+  // ======================= NAVEGAÇÃO / SPA =======================
+  const page = document.getElementById("page");
+  const mainNav = document.getElementById("mainNav");
+  const userArea = document.getElementById("userArea");
+
+  function navItemsFor(role){
+    const common = [
+      { id:"comunidade", label:"💬 Comunidade" },
+      { id:"contato", label:"✉️ Contato" }
+    ];
+    if(role === "Aluno") return [
+      { id:"alunoDashboard", label:"🏠 Início" },
+      { id:"atividades", label:"🎮 Atividades" },
+      { id:"meuProgresso", label:"📊 Meu Progresso" },
+      ...common
+    ];
+    if(role === "Educador") return [
+      { id:"educadorArea", label:"👨‍🏫 Turma" },
+      ...common
+    ];
+    if(role === "Responsável") return [
+      { id:"paisArea", label:"👪 Acompanhamento" },
+      ...common
+    ];
+    if(role === "Administrador") return [
+      { id:"adminArea", label:"🛠️ Painel Admin" },
+      ...common
+    ];
+    return [];
+  }
+
+  function renderTopbar(){
+    mainNav.innerHTML = "";
+    if(state.user){
+      navItemsFor(state.user.role).forEach(item => {
+        const btn = document.createElement("button");
+        btn.textContent = item.label;
+        if(state.currentScreen === item.id) btn.classList.add("active");
+        btn.addEventListener("click", () => navigate(item.id));
+        mainNav.appendChild(btn);
+      });
+      userArea.innerHTML = "";
+      const chip = document.createElement("span");
+      chip.className = "userchip";
+      chip.textContent = state.user.role + ": " + state.user.name;
+      const logout = document.createElement("button");
+      logout.className = "logout-btn";
+      logout.textContent = "Sair";
+      logout.addEventListener("click", () => { state.user = null; navigate("landing"); });
+      userArea.appendChild(chip); userArea.appendChild(logout);
+    } else {
+      const btn = document.createElement("button");
+      btn.textContent = "🏠 Início";
+      if(state.currentScreen === "landing") btn.classList.add("active");
+      btn.addEventListener("click", () => navigate("landing"));
+      mainNav.appendChild(btn);
+      userArea.innerHTML = '<button class="toggle-btn" id="topLoginBtn" aria-pressed="false">Entrar</button>';
+      document.getElementById("topLoginBtn").addEventListener("click", () => navigate("login"));
+    }
+  }
+
+  function navigate(screen){
+    state.currentScreen = screen;
+    renderTopbar();
+    const renderers = {
+      landing: renderLanding, login: renderLogin,
+      alunoDashboard: renderAlunoDashboard, atividades: renderAtividades, meuProgresso: renderMeuProgresso,
+      educadorArea: renderEducadorArea, paisArea: renderPaisArea, adminArea: renderAdminArea,
+      comunidade: renderComunidade, contato: renderContato
+    };
+    (renderers[screen] || renderLanding)();
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+
+  // ======================= LANDING =======================
+  function renderLanding(){
+    page.innerHTML = `
+      <div class="hero">
+        <span class="eyebrow">Plataforma Web Inclusiva</span>
+        <h1>DISLEXIA e APOIO</h1>
+        <p>Uma plataforma gratuita e acessível (WCAG 2.1 AA) com jogos educativos para apoiar estudantes com dislexia (12–18 anos), seus educadores e responsáveis — alinhada à LBI e ao ODS 4 da ONU.</p>
+        <div class="cta-row">
+          <button class="primary-btn" id="ctaEntrar">🚀 Entrar / Cadastrar</button>
+          <button class="ghost-btn" id="ctaSaber">Saiba mais</button>
+        </div>
+      </div>
+
+      <div class="card" id="sobreCard">
+        <h2>Por que essa plataforma existe?</h2>
+        <p class="muted">A dislexia afeta entre 5% e 17% da população brasileira (cerca de 7,8 milhões de pessoas). Apenas 25,2% dos alunos com deficiência concluem o ensino médio, contra 53,4% dos alunos sem deficiência, e 82,2% dos disléxicos relatam baixa autoestima. Ferramentas especializadas tradicionais custam entre R$ 5.000 e R$ 15.000 por mês — um valor fora do alcance da maioria das famílias.</p>
+      </div>
+
+      <div class="card">
+        <h2>Benefícios</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card"><span class="ic">🎯</span><h3>Aprendizado personalizado</h3><p class="muted">Cada aluno avança no próprio ritmo, sem pressão de comparação.</p></div>
+          <div class="benefit-card"><span class="ic">🛡️</span><h3>Ambiente sem julgamento</h3><p class="muted">Errar faz parte do jogo — o foco é tentar de novo, não punir.</p></div>
+          <div class="benefit-card"><span class="ic">📈</span><h3>Relatórios em tempo real</h3><p class="muted">Educadores e responsáveis acompanham acertos e erros por atividade.</p></div>
+          <div class="benefit-card"><span class="ic">♿</span><h3>Acessibilidade real</h3><p class="muted">Fonte ajustável, alto contraste e narração por voz em todas as telas.</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Perguntas frequentes</h2>
+        <div class="faq-item"><b>A plataforma substitui acompanhamento profissional?</b><br>Não. Os jogos são um recurso de apoio e prática, não substituem diagnóstico e acompanhamento especializado.</div>
+        <div class="faq-item"><b>É preciso pagar para usar?</b><br>Não, a plataforma é gratuita e construída com tecnologias open-source.</div>
+        <div class="faq-item"><b>Quem pode usar?</b><br>Alunos de 12 a 18 anos, educadores/psicopedagogos e responsáveis.</div>
+      </div>
+    `;
+    document.getElementById("ctaEntrar").addEventListener("click", () => navigate("login"));
+    document.getElementById("ctaSaber").addEventListener("click", () => {
+      document.getElementById("sobreCard").scrollIntoView({behavior:"smooth"});
+    });
+  }
+
+  // ======================= LOGIN / CADASTRO =======================
+  function renderLogin(){
+    page.innerHTML = `
+      <div class="card login-card">
+        <h2>Entrar na plataforma</h2>
+        <p class="muted">Escolha seu perfil e informe seu nome para continuar. (Protótipo de front-end — sem senha real.)</p>
+        <div class="role-grid" id="roleGrid">
+          <button class="role-choice" data-role="Aluno" aria-pressed="true"><span class="ic">🧑‍🎓</span>Aluno</button>
+          <button class="role-choice" data-role="Educador" aria-pressed="false"><span class="ic">👨‍🏫</span>Educador</button>
+          <button class="role-choice" data-role="Responsável" aria-pressed="false"><span class="ic">👪</span>Responsável</button>
+          <button class="role-choice" data-role="Administrador" aria-pressed="false"><span class="ic">🛠️</span>Administrador</button>
+        </div>
+        <input type="text" id="loginNameInput" placeholder="Seu nome">
+        <button class="primary-btn" id="loginBtn">Entrar</button>
+      </div>
+    `;
+    let selectedRole = "Aluno";
+    document.querySelectorAll(".role-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".role-choice").forEach(b => b.setAttribute("aria-pressed","false"));
+        btn.setAttribute("aria-pressed","true");
+        selectedRole = btn.dataset.role;
+      });
+    });
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const name = document.getElementById("loginNameInput").value.trim() || "Visitante";
+      state.user = { name, role: selectedRole };
+      if(selectedRole === "Aluno"){
+        const saved = await loadProgress();
+        if(saved && saved.user && saved.user.name === name){
+          state.points = saved.points || 0; state.badges = saved.badges || []; state.stats = saved.stats || state.stats;
+        }
+        navigate("alunoDashboard");
+      } else if(selectedRole === "Educador"){ navigate("educadorArea"); }
+      else if(selectedRole === "Responsável"){ navigate("paisArea"); }
+      else { navigate("adminArea"); }
+      speak("Bem-vindo, " + name + "!");
+    });
+  }
+
+  // ======================= DASHBOARD ALUNO =======================
+  function totalAccuracy(stats){
+    const c = Object.values(stats).reduce((s,x)=>s+x.correct,0);
+    const w = Object.values(stats).reduce((s,x)=>s+x.wrong,0);
+    return { c, w, pct: (c+w) ? Math.round((c/(c+w))*100) : 0 };
+  }
+
+  function renderAlunoDashboard(){
+    const acc = totalAccuracy(state.stats);
+    page.innerHTML = `
+      <div class="card">
+        <div class="dash-header">
+          <span class="dash-avatar">🧑‍🎓</span>
+          <div>
+            <div style="font-weight:800; color:var(--teal-dark); font-size:1.15em;">Olá, ${state.user.name}!</div>
+            <div class="muted">Continue sua jornada de aprendizado hoje.</div>
+          </div>
+        </div>
+        <div class="stat-cards" style="margin-top:10px;">
+          <div class="stat-card"><span class="n">${state.points}</span><span class="l">Pontos</span></div>
+          <div class="stat-card"><span class="n">${acc.pct}%</span><span class="l">Acertos gerais</span></div>
+          <div class="stat-card"><span class="n">${state.badges.length}</span><span class="l">Conquistas</span></div>
+        </div>
+        <div class="badges" id="dashBadges"></div>
+      </div>
+
+      <div class="card">
+        <h2>Atividades recomendadas</h2>
+        <p class="muted">Escolha um jogo para praticar. Cada um trabalha uma habilidade diferente.</p>
+        <div class="games-grid" id="dashGamesGrid"></div>
+      </div>
+    `;
+    const dashBadges = document.getElementById("dashBadges");
+    GAMES.forEach(g => {
+      const has = state.badges.includes(g.id);
+      const b = document.createElement("div");
+      b.className = "badge" + (has ? " unlocked" : "");
+      b.textContent = (has ? "✅ " : "🔒 ") + g.name;
+      dashBadges.appendChild(b);
+    });
+    const grid = document.getElementById("dashGamesGrid");
+    GAMES.forEach(g => {
+      const c = document.createElement("div");
+      c.className = "game-card";
+      c.innerHTML = `<span class="ic">${g.ic}</span><h3>${g.name}</h3><p>${g.desc}</p><button class="play-btn">Jogar</button>`;
+      c.querySelector(".play-btn").addEventListener("click", () => { navigate("atividades"); setTimeout(()=>openGame(g.id), 30); });
+      grid.appendChild(c);
+    });
+  }
+
+  // ======================= ATIVIDADES (HUB) =======================
+  function renderAtividades(){
+    page.innerHTML = `
+      <div class="card">
+        <h2>🎮 Módulo de Atividades</h2>
+        <p class="muted">Cinco tipos de jogos, cada um treinando uma habilidade de leitura/escrita diferente.</p>
+        <div class="games-grid" id="hubGrid"></div>
+      </div>
+      <div id="activityStageWrap"></div>
+    `;
+    const grid = document.getElementById("hubGrid");
+    GAMES.forEach(g => {
+      const acc = accuracyOf(state.stats[g.statKey]);
+      const c = document.createElement("div");
+      c.className = "game-card";
+      c.innerHTML = `<span class="ic">${g.ic}</span><h3>${g.name}</h3><p>${g.desc}</p>
+        <p class="muted">${acc === null ? "Ainda não praticado" : "Acurácia: " + acc + "%"}</p>
+        <button class="play-btn">Jogar</button>`;
+      c.querySelector(".play-btn").addEventListener("click", () => openGame(g.id));
+      grid.appendChild(c);
+    });
+  }
+
+  function stageWrap(html){
+    const wrap = document.getElementById("activityStageWrap");
+    wrap.innerHTML = `<div class="activity-stage">${html}</div>`;
+    wrap.scrollIntoView({behavior:"smooth"});
+  }
+
+  function openGame(id){
+    if(state.currentScreen !== "atividades"){ navigate("atividades"); }
+    setTimeout(() => {
+      if(id === "memoria") startMemoria();
+      else if(id === "fonologico") startFonologico();
+      else if(id === "categorizacao") startCategorizacao();
+      else if(id === "sequencia") startSequencia();
+      else if(id === "leitura") startLeitura();
+    }, 30);
+  }
+
+  function registerResult(statKey, correct){
+    if(correct){ state.stats[statKey].correct++; state.points += 15; }
+    else{ state.stats[statKey].wrong++; }
+    if(!state.badges.includes(statKey)){
+      const acc = accuracyOf(state.stats[statKey]);
+      const total = state.stats[statKey].correct + state.stats[statKey].wrong;
+      if(total >= 4 && acc !== null && acc >= 60) state.badges.push(statKey);
+    }
+    saveProgress();
+  }
+
+  // ---------- Jogo 1: Memória de Palavras ----------
+  function buildMemoriaDeck(){
+    const chosen = WORDS.slice(0, 6);
+    let deck = [];
+    chosen.forEach((w,i) => { deck.push({pairId:i,type:"emoji",display:w.emoji,word:w.word}); deck.push({pairId:i,type:"word",display:w.word,word:w.word}); });
+    return deck.sort(()=>Math.random()-0.5);
+  }
+  function startMemoria(){
+    const deck = buildMemoriaDeck();
+    let flipped = [], lock = false, matched = 0;
+    stageWrap(`
+      <h3>🧩 Memória de Palavras</h3>
+      <p class="muted">Encontre os pares: uma carta mostra a imagem, a outra mostra a palavra.</p>
+      <div class="board" id="mBoard" style="grid-template-columns:repeat(4, minmax(64px,90px));"></div>
+      <p class="feedback" id="mFeedback" aria-live="polite"></p>
+    `);
+    const board = document.getElementById("mBoard");
+    const feedback = document.getElementById("mFeedback");
+    deck.forEach((card, i) => {
+      const btn = document.createElement("button");
+      btn.className = "mcard";
+      btn.innerHTML = `<div class="mcard-inner">
+        <div class="mface back"></div>
+        <div class="mface front">${card.type === "emoji" ? '<span class="emoji-face">'+card.display+'</span>' : '<span>'+card.display+'</span>'}</div>
+      </div>`;
+      btn.addEventListener("click", () => {
+        if(lock || card._flipped || card._matched || flipped.length>=2) return;
+        card._flipped = true; btn.classList.add("flip"); speak(card.word);
+        flipped.push({card, btn, i});
+        if(flipped.length === 2){
+          lock = true;
+          const [a,b] = flipped;
+          const isMatch = a.card.pairId === b.card.pairId && a.card.type !== b.card.type;
+          setTimeout(() => {
+            if(isMatch){
+              a.card._matched = true; b.card._matched = true;
+              a.btn.classList.add("matched"); b.btn.classList.add("matched");
+              matched++; feedback.textContent = "Muito bem! Par encontrado: " + a.card.word + " 🎉";
+              registerResult("memoria", true);
+              if(matched === deck.length/2){ feedback.textContent = "🏆 Você encontrou todos os pares!"; speak("Parabéns! Você encontrou todos os pares."); }
+            } else {
+              a.card._flipped = false; b.card._flipped = false;
+              a.btn.classList.remove("flip"); b.btn.classList.remove("flip");
+              feedback.textContent = "Quase! Tente lembrar onde estavam essas cartas.";
+              registerResult("memoria", false);
+            }
+            flipped = []; lock = false;
+          }, 650);
+        }
+      });
+      board.appendChild(btn);
+    });
+  }
+
+  // ---------- Jogo 2: Quiz Fonológico ----------
+  function startFonologico(){
+    let qi = 0;
+    const questions = RHYME_QUESTIONS.slice().sort(()=>Math.random()-0.5);
+    function render(){
+      const q = questions[qi];
+      stageWrap(`
+        <h3>🔤 Quiz Fonológico</h3>
+        <p class="muted">Pergunta ${qi+1} de ${questions.length}</p>
+        <p style="font-weight:bold;">${q.q}</p>
+        <div class="options-grid" id="fOptions"></div>
+        <p class="feedback" id="fFeedback" aria-live="polite"></p>
+        <button class="hint-btn" id="fHint">💡 Dica</button>
+      `);
+      speak(q.q);
+      const opts = document.getElementById("fOptions");
+      q.options.forEach((opt,i) => {
+        const b = document.createElement("button");
+        b.className = "option-btn"; b.textContent = opt;
+        b.addEventListener("click", () => {
+          const correct = i === q.correct;
+          b.classList.add(correct ? "correct" : "wrong");
+          if(!correct) opts.children[q.correct].classList.add("correct");
+          document.getElementById("fFeedback").textContent = correct ? "Certo! 🎉" : "Quase! A resposta certa era: " + q.options[q.correct];
+          registerResult("fonologico", correct);
+          [...opts.children].forEach(c=>c.disabled=true);
+          setTimeout(() => { qi++; if(qi < questions.length) render(); else stageWrap('<h3>🔤 Quiz Fonológico</h3><p class="feedback">🏆 Quiz concluído! Você pode jogar novamente pelo painel de atividades.</p>'); }, 1200);
+        });
+        opts.appendChild(b);
+      });
+      document.getElementById("fHint").addEventListener("click", () => { document.getElementById("fFeedback").textContent = "💡 " + q.hint; speak(q.hint); });
+    }
+    render();
+  }
+
+  // ---------- Jogo 3: Categorização de Palavras ----------
+  function startCategorizacao(){
+    let pool = WORDS.slice().sort(()=>Math.random()-0.5);
+    let selected = null;
+    let doneCount = 0;
+    stageWrap(`
+      <h3>🗂️ Categorização de Palavras</h3>
+      <p class="muted">Toque em uma palavra e depois na categoria correta.</p>
+      <div class="word-pool" id="cPool"></div>
+      <div class="cat-buckets" id="cBuckets"></div>
+      <p class="feedback" id="cFeedback" aria-live="polite"></p>
+    `);
+    const poolEl = document.getElementById("cPool");
+    const bucketsEl = document.getElementById("cBuckets");
+    const feedback = document.getElementById("cFeedback");
+
+    pool.forEach(w => {
+      const chip = document.createElement("button");
+      chip.className = "word-chip"; chip.textContent = w.emoji + " " + w.word;
+      chip.addEventListener("click", () => {
+        if(chip.classList.contains("done")) return;
+        [...poolEl.children].forEach(c=>c.classList.remove("selected"));
+        chip.classList.add("selected"); selected = { w, chip };
+        speak(w.word);
+      });
+      poolEl.appendChild(chip);
+    });
+
+    CATEGORIES.forEach(cat => {
+      const bucket = document.createElement("div");
+      bucket.className = "cat-bucket";
+      bucket.innerHTML = cat + '<div class="items"></div>';
+      bucket.addEventListener("click", () => {
+        if(!selected) { feedback.textContent = "Primeiro escolha uma palavra."; return; }
+        const correct = selected.w.cat === cat;
+        if(correct){
+          selected.chip.classList.add("done");
+          bucket.querySelector(".items").textContent += (bucket.querySelector(".items").textContent ? ", " : "") + selected.w.word;
+          feedback.textContent = "Muito bem! " + selected.w.word + " é " + cat + ". 🎉";
+          doneCount++;
+        } else {
+          feedback.textContent = "Quase! " + selected.w.word + " não é " + cat + ". Tente outra categoria.";
+        }
+        registerResult("categorizacao", correct);
+        selected.chip.classList.remove("selected");
+        selected = null;
+        if(doneCount === pool.length){ feedback.textContent = "🏆 Você categorizou todas as palavras!"; speak("Você categorizou todas as palavras!"); }
+      });
+      bucketsEl.appendChild(bucket);
+    });
+  }
+
+  // ---------- Jogo 4: Sequência Lógica ----------
+  function startSequencia(){
+    let order = SEQUENCE_STEPS.map((t,i)=>({t,correctPos:i}));
+    order = order.slice().sort(()=>Math.random()-0.5);
+    stageWrap(`
+      <h3>🔢 Sequência Lógica</h3>
+      <p class="muted">Use as setas para colocar a rotina de Ana na ordem certa e depois confirme.</p>
+      <ul class="seq-list" id="seqList"></ul>
+      <button class="primary-btn" id="seqConfirm">Confirmar ordem</button>
+      <p class="feedback" id="seqFeedback" aria-live="polite"></p>
+    `);
+    const list = document.getElementById("seqList");
+    function render(){
+      list.innerHTML = "";
+      order.forEach((item, idx) => {
+        const li = document.createElement("li");
+        li.className = "seq-item";
+        li.innerHTML = `<span class="txt">${idx+1}. ${item.t}</span>
+          <button class="seq-move" data-dir="up" data-idx="${idx}">▲</button>
+          <button class="seq-move" data-dir="down" data-idx="${idx}">▼</button>`;
+        list.appendChild(li);
+      });
+      list.querySelectorAll(".seq-move").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.dataset.idx);
+          const dir = btn.dataset.dir;
+          const swapWith = dir === "up" ? idx-1 : idx+1;
+          if(swapWith < 0 || swapWith >= order.length) return;
+          [order[idx], order[swapWith]] = [order[swapWith], order[idx]];
+          render();
+        });
+      });
+    }
+    render();
+    document.getElementById("seqConfirm").addEventListener("click", () => {
+      const correct = order.every((item, idx) => item.correctPos === idx);
+      document.getElementById("seqFeedback").textContent = correct
+        ? "🏆 Perfeito! Você organizou a rotina de Ana corretamente!"
+        : "Quase! Alguns passos ainda estão fora de ordem. Tente ajustar com as setas.";
+      speak(correct ? "Perfeito! Ordem correta." : "Quase! Ajuste a ordem.");
+      registerResult("sequencia", correct);
+    });
+  }
+
+  // ---------- Jogo 5: Leitura Assistida + Compreensão ----------
+  function startLeitura(){
+    const words = READING_TEXT.split(" ");
+    stageWrap(`
+      <h3>🎧 Leitura Assistida</h3>
+      <p class="muted">Toque em "Ouvir texto" para escutar com destaque nas palavras, depois responda às perguntas.</p>
+      <button class="ghost-btn" id="playText">🔊 Ouvir texto</button>
+      <div class="reading-text" id="readingText"></div>
+      <div id="compQuizWrap"></div>
+    `);
+    const box = document.getElementById("readingText");
+    box.innerHTML = words.map((w,i) => `<span class="w" id="w${i}">${w}</span>`).join(" ");
+
+    document.getElementById("playText").addEventListener("click", () => {
+      if(!state.soundOn){ alert("Ative a narração no topo da página para ouvir o texto."); return; }
+      try{
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(READING_TEXT);
+        u.lang = "pt-BR"; u.rate = state.speechRate;
+        let lastIdx = -1;
+        u.onboundary = (e) => {
+          if(e.name !== "word") return;
+          const before = READING_TEXT.slice(0, e.charIndex);
+          const idx = before.trim().length ? before.trim().split(" ").length : 0;
+          if(idx !== lastIdx){
+            document.querySelectorAll(".reading-text .w").forEach(el=>el.classList.remove("active"));
+            const el = document.getElementById("w"+idx);
+            if(el) el.classList.add("active");
+            lastIdx = idx;
+          }
+        };
+        u.onend = () => document.querySelectorAll(".reading-text .w").forEach(el=>el.classList.remove("active"));
+        window.speechSynthesis.speak(u);
+      }catch(e){ /* narração indisponível neste navegador */ }
+    });
+
+    let qi = 0;
+    function renderQuiz(){
+      const wrap = document.getElementById("compQuizWrap");
+      if(qi >= COMP_QUESTIONS.length){
+        wrap.innerHTML = '<p class="feedback">🏆 Você concluiu a leitura assistida!</p>';
+        return;
+      }
+      const q = COMP_QUESTIONS[qi];
+      wrap.innerHTML = `<p style="font-weight:bold; margin-top:14px;">${q.q}</p>
+        <div class="options-grid" id="compOptions"></div>
+        <p class="feedback" id="compFeedback" aria-live="polite"></p>`;
+      const opts = document.getElementById("compOptions");
+      q.options.forEach((opt,i) => {
+        const b = document.createElement("button");
+        b.className = "option-btn"; b.textContent = opt;
+        b.addEventListener("click", () => {
+          const correct = i === q.correct;
+          b.classList.add(correct ? "correct" : "wrong");
+          if(!correct) opts.children[q.correct].classList.add("correct");
+          document.getElementById("compFeedback").textContent = correct ? "Certo! 🎉" : "Quase! A resposta certa era: " + q.options[q.correct];
+          registerResult("leitura", correct);
+          [...opts.children].forEach(c=>c.disabled=true);
+          setTimeout(() => { qi++; renderQuiz(); }, 1200);
+        });
+        opts.appendChild(b);
+      });
+    }
+    renderQuiz();
+  }
+
+  // ======================= MEU PROGRESSO (ALUNO) =======================
+  function renderMeuProgresso(){
+    const acc = totalAccuracy(state.stats);
+    let rows = "";
+    GAMES.forEach(g => {
+      const a = accuracyOf(state.stats[g.statKey]);
+      const pct = a === null ? 0 : a;
+      const cls = pct < 50 ? "low" : pct < 75 ? "mid" : "";
+      rows += `<div class="bar-chart-row"><span class="name">${g.ic} ${g.name}</span>
+        <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+        <span class="bar-pct">${a === null ? "—" : pct+"%"}</span></div>`;
+    });
+    page.innerHTML = `
+      <div class="card">
+        <h2>📊 Meu Progresso</h2>
+        <div class="stat-cards" style="margin-bottom:14px;">
+          <div class="stat-card"><span class="n">${state.points}</span><span class="l">Pontos totais</span></div>
+          <div class="stat-card"><span class="n">${acc.pct}%</span><span class="l">Acertos gerais</span></div>
+          <div class="stat-card"><span class="n">${acc.c}</span><span class="l">Acertos</span></div>
+          <div class="stat-card"><span class="n">${acc.w}</span><span class="l">Erros</span></div>
+        </div>
+        <h3 style="color:var(--teal-dark);">Desempenho por atividade</h3>
+        ${rows}
+      </div>
+    `;
+  }
+
+  // ======================= ÁREA DO EDUCADOR =======================
+  function renderEducadorArea(){
+    const students = [];
+    // Se um aluno já jogou nesta sessão, mostra dados reais dele também
+    if(state.points > 0 || Object.values(state.stats).some(s=>s.correct+s.wrong>0)){
+      students.push({ name:(state.user && state.user.role==="Aluno"?state.user.name:"Aluno da sessão atual"), avatar:"🧑‍🎓", points: state.points, stats: state.stats, live:true });
+    }
+    MOCK_STUDENTS.forEach(s => students.push(s));
+
+    let rosterRows = "";
+    students.forEach(s => {
+      let cells = `<td>${s.avatar} ${s.name}${s.live?" (sessão atual)":""}</td><td>${s.points}</td>`;
+      GAMES.forEach(g => {
+        const acc = accuracyOf(s.stats[g.statKey]);
+        cells += acc === null ? '<td style="opacity:0.5;">—</td>' : `<td>${acc}%</td>`;
+      });
+      rosterRows += `<tr>${cells}</tr>`;
+    });
+
+    // sugestão baseada no aluno real, se houver
+    let suggestionText = "Assim que um aluno praticar, sugestões de reforço aparecerão aqui.";
+    if(students[0] && students[0].live){
+      let worst = null, worstAcc = 101;
+      GAMES.forEach(g => { const a = accuracyOf(students[0].stats[g.statKey]); if(a !== null && a < worstAcc){ worstAcc=a; worst=g; } });
+      if(worst) suggestionText = "💡 Sugestão: " + students[0].name + " teve " + worstAcc + "% de acerto em " + worst.name + ". Vale reforçar essa habilidade antes de avançar.";
+    }
+
+    page.innerHTML = `
+      <div class="card">
+        <h2>👨‍🏫 Área do Educador</h2>
+        <p class="muted">Acompanhe acertos e erros de cada aluno, por tipo de atividade.</p>
+        <h3 style="color:var(--teal-dark);">Turma</h3>
+        <p class="tag-note">Os alunos sem "(sessão atual)" são dados de exemplo, para demonstrar o painel com uma turma completa.</p>
+        <div style="overflow-x:auto;">
+          <table class="roster">
+            <thead><tr><th>Aluno</th><th>Pontos</th>${GAMES.map(g=>`<th>${g.ic}</th>`).join("")}</tr></thead>
+            <tbody>${rosterRows}</tbody>
+          </table>
+        </div>
+        <div class="suggestion">${suggestionText}</div>
+      </div>
+      <div class="card">
+        <h2>📚 Biblioteca de Recursos (exemplo)</h2>
+        <ul>
+          <li>Guia rápido: Reconhecendo sinais de dislexia em sala de aula</li>
+          <li>Vídeo: Como adaptar textos para leitura acessível</li>
+          <li>Modelo de plano de apoio pedagógico individualizado</li>
+        </ul>
+      </div>
+    `;
+  }
+
+  // ======================= PAINEL DOS RESPONSÁVEIS =======================
+  function renderPaisArea(){
+    const hasData = state.points > 0 || Object.values(state.stats).some(s=>s.correct+s.wrong>0);
+    const acc = totalAccuracy(state.stats);
+    page.innerHTML = `
+      <div class="card">
+        <h2>👪 Painel dos Responsáveis</h2>
+        <p class="muted">Um resumo simples e acolhedor do progresso na jornada de aprendizagem.</p>
+        ${hasData ? `
+          <div class="stat-cards" style="margin:14px 0;">
+            <div class="stat-card"><span class="n">${state.points}</span><span class="l">Pontos</span></div>
+            <div class="stat-card"><span class="n">${acc.pct}%</span><span class="l">Acertos gerais</span></div>
+            <div class="stat-card"><span class="n">${state.badges.length}</span><span class="l">Conquistas</span></div>
+          </div>
+        ` : `<p class="muted">O aluno ainda não começou a praticar. Assim que começar, o progresso aparecerá aqui.</p>`}
+        <h3 style="color:var(--teal-dark);">Como apoiar em casa</h3>
+        <div class="tips-list">
+          <div class="tip-card"><b>Leitura compartilhada:</b> leiam juntos alguns minutos por dia, sem corrigir cada erro na hora.</div>
+          <div class="tip-card"><b>Jogos de rima e sílabas:</b> forca, caça-palavras e jogos de rimar ajudam a treinar a consciência fonológica.</div>
+          <div class="tip-card"><b>Celebre o esforço:</b> comemore tentativas e progresso, não apenas acertos.</div>
+          <div class="tip-card"><b>Rotina curta e constante:</b> sessões curtas e frequentes funcionam melhor do que sessões longas e raras.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ======================= PAINEL ADMIN =======================
+  function renderAdminArea(){
+    const totalAlunos = MOCK_STUDENTS.length + (state.points>0 ? 1 : 0);
+    page.innerHTML = `
+      <div class="card">
+        <h2>🛠️ Painel de Administrador</h2>
+        <p class="muted">Visão geral da plataforma (dados de demonstração).</p>
+        <div class="stat-cards">
+          <div class="stat-card"><span class="n">${totalAlunos}</span><span class="l">Alunos cadastrados</span></div>
+          <div class="stat-card"><span class="n">1</span><span class="l">Educadores</span></div>
+          <div class="stat-card"><span class="n">1</span><span class="l">Responsáveis</span></div>
+          <div class="stat-card"><span class="n">${GAMES.length}</span><span class="l">Atividades ativas</span></div>
+        </div>
+        <h3 style="color:var(--teal-dark); margin-top:16px;">Configurações de privacidade e LGPD</h3>
+        <p class="muted">Dados de progresso são armazenados apenas para fins pedagógicos, conforme a Lei Geral de Proteção de Dados (LGPD). Este protótipo não coleta dados fora do navegador do usuário.</p>
+      </div>
+    `;
+  }
+
+  // ======================= COMUNIDADE =======================
+  function renderComunidade(){
+    page.innerHTML = `
+      <div class="card">
+        <h2>💬 Comunidade (moderada)</h2>
+        <p class="muted">Espaço para compartilhar conquistas e dicas. Todo conteúdo é moderado.</p>
+        <div id="forumList"></div>
+        <textarea id="newPostText" rows="2" placeholder="Compartilhe algo com a comunidade..."></textarea>
+        <button class="primary-btn" style="margin-top:8px;" id="postBtn">Publicar</button>
+      </div>
+    `;
+    const list = document.getElementById("forumList");
+    function renderPosts(){
+      list.innerHTML = "";
+      state.forumPosts.forEach(p => {
+        const el = document.createElement("div");
+        el.className = "forum-post";
+        el.innerHTML = `<div class="meta">${p.author}</div><div>${p.text}</div>`;
+        list.appendChild(el);
+      });
+    }
+    renderPosts();
+    document.getElementById("postBtn").addEventListener("click", () => {
+      const txt = document.getElementById("newPostText").value.trim();
+      if(!txt) return;
+      state.forumPosts.push({ author: state.user ? state.user.name : "Visitante", text: txt });
+      document.getElementById("newPostText").value = "";
+      renderPosts();
+    });
+  }
+
+  // ======================= CONTATO =======================
+  function renderContato(){
+    page.innerHTML = `
+      <div class="card">
+        <h2>✉️ Contato e Suporte</h2>
+        <p class="muted">Envie uma mensagem para nossa equipe (formulário de demonstração, sem envio real).</p>
+        <input type="email" id="contatoEmail" placeholder="Seu e-mail" style="margin-bottom:10px;">
+        <textarea id="contatoMsg" rows="4" placeholder="Sua mensagem"></textarea>
+        <button class="primary-btn" style="margin-top:10px;" id="contatoBtn">Enviar</button>
+        <p class="feedback" id="contatoFeedback"></p>
+      </div>
+      <div class="card">
+        <h2>❓ Base de Conhecimento</h2>
+        <div class="faq-item"><b>Como ajusto o tamanho da letra?</b><br>Use o controle "Tamanho da letra" no topo da página, disponível em qualquer tela.</div>
+        <div class="faq-item"><b>Como funciona a narração?</b><br>Toque em "🔊 Narração" no topo, e o texto será lido em voz alta usando a tecnologia do seu navegador.</div>
+      </div>
+    `;
+    document.getElementById("contatoBtn").addEventListener("click", () => {
+      document.getElementById("contatoFeedback").textContent = "Mensagem registrada (protótipo). Nossa equipe normalmente responde em até 2 dias úteis.";
+    });
+  }
+
+  // ======================= ACESSIBILIDADE GLOBAL =======================
+  document.getElementById("soundToggle").addEventListener("click", (e) => {
+    state.soundOn = !state.soundOn;
+    e.target.setAttribute("aria-pressed", state.soundOn ? "true":"false");
+    e.target.textContent = state.soundOn ? "🔊 Narração" : "🔇 Sem narração";
+  });
+  document.getElementById("contrastToggle").addEventListener("click", (e) => {
+    const isHigh = document.body.getAttribute("data-contrast") === "alto";
+    document.body.setAttribute("data-contrast", isHigh ? "normal" : "alto");
+    e.target.setAttribute("aria-pressed", isHigh ? "false" : "true");
+  });
+  document.getElementById("fontSize").addEventListener("input", (e) => {
+    document.documentElement.style.setProperty("--font-scale", (e.target.value/16));
+    document.getElementById("fontSizeVal").textContent = e.target.value + "px";
+  });
+  document.getElementById("speed").addEventListener("input", (e) => {
+    state.speechRate = parseFloat(e.target.value);
+    document.getElementById("speedVal").textContent = e.target.value + "x";
+  });
+
+  // ======================= INIT =======================
+  renderTopbar();
+  navigate("landing");
+})();
+</script>
+</body>
+</html>
