@@ -64,7 +64,14 @@ git clone https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.
 # Entre na pasta
 cd Plataforma-Dislexixa-e-Apoio
 
+🚀 Demonstração e Acesso Online
+
+Você pode acessar e testar o jogo diretamente pelo navegador através do GitHub Pages , sem a necessidade de instalação prévia:
+
+👉 Acessar o Jogo Online (https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.git)
+
 # Abra o arquivo direto no navegador
+
 # (duplo clique em index.html ou use uma extensão "Live Server")
 
 📂 Estrutura do repositório
