@@ -1,9 +1,13 @@
 # Plataforma-Dislexixa-e-Apoio
+
 Plataforma web inclusiva e gamificada de apoio psicopedagógico para estudantes com dislexia (12-18 anos), educadores e responsáveis.
 
 Sistema Web Inclusivo para Apoio Psicopedagógico — uma plataforma gratuita, acessível (WCAG 2.1 AA) e gamificada para apoiar estudantes com dislexia (12–18 anos), educadores e responsáveis.
 
-Projeto Integrador III — Curso Técnico em Informática para Internet IFTO (Instituto Federal de Educação, Ciência e Tecnologia do Tocantins) — Campus Palmas Autor: Gabriel Andrade Rodriguez
+Projeto Integrador III 
+Curso Técnico em Informática para Internet 
+IFTO (Instituto Federal de Educação, Ciência e Tecnologia do Tocantins) 
+Campus Palmas Autor: Gabriel Andrade Rodriguez
 
 🎯 Sobre o projeto
 
@@ -12,29 +16,48 @@ A dislexia afeta entre 5% e 17% da população brasileira (cerca de 7,8 milhões
 A DISLEXIA e APOIO nasce para democratizar esse suporte: uma plataforma web open-source, gamificada e alinhada à LBI (2015), à LGPD e ao ODS 4 da ONU.
 
 ✨ Funcionalidades
+
 Três perfis de usuário: Aluno, Educador e Responsável (+ Administrador)
 5 jogos educativos cobrindo diferentes habilidades de leitura/escrita:
+
 Jogo	Habilidade treinada
+
 🧩 Memória de Palavras	Associação imagem–palavra
+
 🔤 Quiz Fonológico	Rimas e consciência silábica
+
 🗂️ Categorização de Palavras	Classificação semântica
+
 🔢 Sequência Lógica	Ordenação de eventos / raciocínio sequencial
+
 🎧 Leitura Assistida	Leitura com narração (TTS) + compreensão textual
+
 Dashboard do Aluno: progresso, pontos, badges e recomendações
+
 Painel do Educador: acertos/erros por aluno e por tipo de atividade, com sugestões automáticas de reforço pedagógico
+
 Painel dos Responsáveis: resumo simples do progresso + dicas de apoio em casa
+
 Acessibilidade (WCAG 2.1 AA): fonte ajustável (12–24px), alto contraste, narração por voz (Web Speech API), navegação por teclado
+
 Comunidade moderada e página de contato/suporte
+
 🛠️ Tecnologias
+
 Frontend: HTML5, CSS3, JavaScript (ES6+) — SPA sem recarregamento de página
+
 Acessibilidade: Web Speech API (Text-to-Speech e destaque de palavras)
+
 Persistência: armazenamento local de progresso do aluno
+
 Backend sugerido (evolução futura): Node.js/Express ou PHP + MySQL
+
 🚀 Como executar
 
 Este é um protótipo front-end funcional em um único arquivo HTML — não requer instalação nem servidor.
 
 bash
+
 # Clone o repositório
 git clone https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.git
 
@@ -43,10 +66,13 @@ cd Plataforma-Dislexixa-e-Apoio
 
 # Abra o arquivo direto no navegador
 # (duplo clique em index.html ou use uma extensão "Live Server")
+
 📂 Estrutura do repositório
+
 dislexia-e-apoio/
 ├── index.html          # Plataforma completa (landing, login, dashboards, jogos)
 └── README.md
+
 ♿ Acessibilidade
 
 Todos os controles de acessibilidade ficam fixos no topo da tela, em qualquer página:
@@ -72,4 +98,7 @@ Projeto acadêmico desenvolvido para fins educacionais no âmbito do Projeto Int
 
 👤 Autor
 
-Gabriel Andrade Rodriguez Curso Técnico em Informática para Internet — IFTO, Campus Palmas Orientação: Prof. Me. Francirley Resendes Borges Costa
+Gabriel Andrade Rodriguez 
+Curso Técnico em Informática para Internet 
+IFTO, Campus Palmas 
+Orientação: Prof. Me. Francirley Resendes Borges Costa
