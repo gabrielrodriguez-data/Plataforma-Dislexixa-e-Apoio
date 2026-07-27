@@ -18,6 +18,7 @@ A DISLEXIA e APOIO nasce para democratizar esse suporte: uma plataforma web open
 ✨ Funcionalidades
 
 Três perfis de usuário: Aluno, Educador e Responsável (+ Administrador)
+
 5 jogos educativos cobrindo diferentes habilidades de leitura/escrita:
 
 Jogo	Habilidade treinada
