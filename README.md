@@ -36,10 +36,10 @@ Este é um protótipo front-end funcional em um único arquivo HTML — não req
 
 bash
 # Clone o repositório
-git clone https://github.com/gabrielrodriguez-data/dislexia-e-apoio.git
+git clone https://github.com/gabrielrodriguez-data/Plataforma-Dislexixa-e-Apoio.git
 
 # Entre na pasta
-cd dislexia-e-apoio
+cd Plataforma-Dislexixa-e-Apoio
 
 # Abra o arquivo direto no navegador
 # (duplo clique em index.html ou use uma extensão "Live Server")
